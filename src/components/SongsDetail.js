@@ -7,7 +7,7 @@ const SongsDetail = (props) => {
     const [isLoading, setIsLoading] = useState(false)
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 10 }}>
+        <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 10,backgroundColor:'lightblue' }}>
             {isLoading ?
                 <View style={{ height: "50%", width: "100%", justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator color={"black"} size='large' />
@@ -109,8 +109,8 @@ const SongsDetail = (props) => {
 
                         <TouchableOpacity 
                         onPress={()=>Linking.openURL(props.link)}
-                          style={{ height: 30, width: "100%", borderColor: "blue", marginBottom: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                           <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD }}>Click Here To Open Song Link !!</Text>
+                          style={{ backgroundColor:'blue', borderRadius:20, height: 30, width: "100%", borderColor: "blue", marginBottom: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                           <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:'white' }}>CLICK HERE TO OPEN SONG !!</Text>
                         </TouchableOpacity>
                     </View>
                 </>

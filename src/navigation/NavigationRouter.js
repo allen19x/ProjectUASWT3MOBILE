@@ -8,6 +8,8 @@ import {
 import { Fonts } from '../GlobalConfig';
 import SongsScreen from '../components/SongsScreen';
 import SongsDetail from '../components/SongsDetail';
+import SongsUpdate from '../components/SongsUpdate';
+import LoginScreen from '../components/LoginScreen';
 
 
 class NavigationRouter extends Component {
@@ -46,8 +48,14 @@ class NavigationRouter extends Component {
                 backAndroidHandler={this.handleback}>
                 <Stack
                     key='root'>
-                    <Scene key='songs'
+                    <Scene key='login'
                         initial
+                        title="Login"
+                        titleStyle={styles.headerTitleBig}
+                        component={LoginScreen} />
+                    <Scene key='songs'
+                        onEnter={() => Actions.refresh({ lastUpdate: new Date })}
+                        hideNavBar
                         title="Song List"
                         titleStyle={styles.headerTitleBig}
                         component={SongsScreen} />
@@ -57,6 +65,12 @@ class NavigationRouter extends Component {
                         title="Song Detail"
                         titleStyle={styles.headerTitleBig}
                         component={SongsDetail} />
+                    <Scene key='songsUpdate'
+                        back
+                        backButtonTintColor="white"
+                        title="Song Update"
+                        titleStyle={styles.headerTitleBig}
+                        component={SongsUpdate} />
                 </Stack>
             </Router>
         )
