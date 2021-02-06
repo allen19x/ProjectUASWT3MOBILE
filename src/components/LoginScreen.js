@@ -16,13 +16,15 @@ const LoginScreen = (props) => {
             password: passwordValue
         }
         Actions.songs(loginData)
+        setLoginValue("")
+        setPasswordValue("")
     }
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 10, backgroundColor:'lightblue' }}>
             {isLoading ?
                 <View style={{ height: "50%", width: "100%", justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator color={"black"} size='large' />
+                    <ActivityIndicator color="black" size='large' />
                 </View>
                 :
                 <>
@@ -43,7 +45,7 @@ const LoginScreen = (props) => {
                                     <TextInput
                                         selectionColor="red"
                                         numberOfLines={1}
-                                        style={{ fontFamily: Fonts.SF_COMPACT_REGULAR, color: "lightblack", fontSize: 14, marginLeft: 2 }}
+                                        style={{ fontFamily: Fonts.SF_COMPACT_REGULAR, color: "black", fontSize: 14, marginLeft: 2 }}
                                         value={loginValue}
                                         onChangeText={setLoginValue}>
                                     </TextInput>
@@ -66,7 +68,7 @@ const LoginScreen = (props) => {
                                     <TextInput
                                         selectionColor="red"
                                         numberOfLines={1}
-                                        style={{ fontFamily: Fonts.SF_COMPACT_REGULAR, color: "lightblack", fontSize: 14, marginLeft: 2 }}
+                                        style={{ fontFamily: Fonts.SF_COMPACT_REGULAR, color: "black", fontSize: 14, marginLeft: 2 }}
                                         value={passwordValue}
                                         onChangeText={setPasswordValue}>
                                     </TextInput>

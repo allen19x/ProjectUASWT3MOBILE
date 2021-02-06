@@ -5,3 +5,4 @@ export const Fonts = {
    SF_COMPACT_SEMI_BOLD: 'SFCompactText-SemiBold',
    SF_COMPACT_BOLD: 'SFCompactText-Bold',
 }
+

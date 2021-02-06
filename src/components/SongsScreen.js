@@ -13,37 +13,41 @@ const SongsScreen = (props) => {
     const [searchValue, setSearchValue] = useState("")
     const [isModalFilter, setIsModalFilter] = useState(false)
     const [filtervalue, setFiltervalue] = useState("")
+    const [userName, setUserName] = useState(props.username)
+    const [password, setPassword] = useState(props.password)
+
+    const BASE_URL = "http://192.168.0.17:3001"
 
     useEffect(() => {
         setIsLoading(true)
-        if(props.lastUpdate)
-        var session_url = 'http://ea64f1c0bce9.ngrok.io/songs';
-        var uname = props.username;
-        var pass = props.password;
-        const token = Buffer.from(`${uname}:${pass}`, 'utf8').toString('base64')
-        console.log("TEST", token)
-        var config = {
-            "headers": {
-                "Authorization": "Basic " + token
-            }
-        };
-        axios.get(session_url, config)
-            .then(function (response) {
-                setSongList(response.data.data);
-                console.log(response);
-                setIsLoading(false)
-            }).catch(function (error) {
-                console.log(error.response.data);
-                alert('Failed Login')
-                Actions.pop()
-            });
+        if (props.lastUpdate){
+                var session_url = `${BASE_URL}/songs`;
+                var uname = "admin"
+                var pass = "admin"
+                const token = Buffer.from(`${uname}:${pass}`, 'utf8').toString('base64')
+                var config = {
+                    "headers": {
+                        "Authorization": "Basic " + token
+                    }
+                };
+                axios.get(session_url, config)
+                    .then(function (response) {
+                        setSongList(response.data.data);
+                        console.log(response);
+                        setIsLoading(false)
+                    }).catch(function (error) {
+                        console.log(error);
+                        alert('Failed Login')
+                        Actions.pop()
+                    });
+                }
     }, [props.lastUpdate])
 
     const searchSong = () => {
         setIsLoading(true)
-        var session_url = 'http://ea64f1c0bce9.ngrok.io/songs?' + filtervalue + "=" + searchValue;
-        var uname = 'allen';
-        var pass = 'allen';
+        var session_url = `${BASE_URL}/songs?${filtervalue}=${searchValue}`;
+        var uname = userName
+        var pass = password
         const token = Buffer.from(`${uname}:${pass}`, 'utf8').toString('base64')
         console.log("TEST", token)
         var config = {
@@ -53,6 +57,7 @@ const SongsScreen = (props) => {
         };
         axios.get(session_url, config)
             .then(function (response) {
+                console.log(response)
                 setIsLoading(false)
                 setSongList(response.data.data);
                 if (response.data.data == "") {
@@ -88,17 +93,28 @@ const SongsScreen = (props) => {
         Actions.songsDetail(data)
     }
 
-    const goToUpdate =(data)=>{
-        const sendtData={
-            songs:data,
-            loginData:props
+    const logout = () => {
+        Actions.login()
+    }
+    const addNewSong = (data) => {
+        const sendtData = {
+            songs: data,
+            loginData: props
+        }
+        Actions.addSong(sendtData)
+    }
+
+    const goToUpdate = (data) => {
+        const sendtData = {
+            songs: data,
+            loginData: props
         }
         Actions.songsUpdate(sendtData)
     }
 
-    const deleteSong =(data)=>{
+    const deleteSong = (data) => {
         setIsLoading(true)
-        var session_url = 'http://ea64f1c0bce9.ngrok.io/songs/'+data;
+        var session_url = `${BASE_URL}/songs/${data}`;
         var uname = props.username;
         var pass = props.password;
         const token = Buffer.from(`${uname}:${pass}`, 'utf8').toString('base64')
@@ -110,8 +126,8 @@ const SongsScreen = (props) => {
         };
         axios.delete(session_url, config)
             .then(function (response) {
-             alert('Success Delete This ID')
-             setIsLoading(false)
+                alert('Success Delete This ID')
+                setIsLoading(false)
             }).catch(function (error) {
                 console.log(error.response.data);
                 alert('Not Authorized')
@@ -124,19 +140,19 @@ const SongsScreen = (props) => {
         modalContent = (
             <View style={{ backgroundColor: "blue", padding: 15, borderRadius: 20, width: '100%', height: 200, justifyContent: 'space-evenly', alignItems: 'center' }}>
                 <TouchableOpacity
-                    style={{  backgroundColor:'blue', borderRadius:20,flex: 1, width: "100%", borderWidth: 1, backgroundColor: "lightblue", justifyContent: 'center', alignItems: 'center', borderColor: 'black' }}
+                    style={{ backgroundColor: 'blue', borderRadius: 20, flex: 1, width: "100%", borderWidth: 1, backgroundColor: "lightblue", justifyContent: 'center', alignItems: 'center', borderColor: 'black' }}
                     onPress={() => selectFilter("title")}>
-                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>Title</Text>
+                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>Title</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={{ backgroundColor:'blue', borderRadius:20,flex: 1, width: "100%", borderWidth: 1, backgroundColor: "lightblue", justifyContent: 'center', alignItems: 'center', borderColor: 'black' }}
+                    style={{ backgroundColor: 'blue', borderRadius: 20, flex: 1, width: "100%", borderWidth: 1, backgroundColor: "lightblue", justifyContent: 'center', alignItems: 'center', borderColor: 'black' }}
                     onPress={() => selectFilter("artist")}>
-                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>Artist</Text>
+                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>Artist</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={{ backgroundColor:'blue', borderRadius:20,flex: 1, width: "100%", borderWidth: 1, backgroundColor: "lightblue", justifyContent: 'center', alignItems: 'center', borderColor: 'black' }}
+                    style={{ backgroundColor: 'blue', borderRadius: 20, flex: 1, width: "100%", borderWidth: 1, backgroundColor: "lightblue", justifyContent: 'center', alignItems: 'center', borderColor: 'black' }}
                     onPress={() => selectFilter("album")}>
-                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>Album</Text>
+                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>Album</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -166,19 +182,19 @@ const SongsScreen = (props) => {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                <View style={{flexDirection:'row', marginBottom:5}}>
-                <TouchableOpacity
-                    onPress={() => goToUpdate(item.item)}
-                    style={{ backgroundColor:'blue', borderRadius:20, flex:1, borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>UPDATE</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => deleteSong(item.item.id)}
-                    style={{ backgroundColor:'blue', borderRadius:20,flex:1,borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>DELETE</Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+                    <TouchableOpacity
+                        onPress={() => goToUpdate(item.item)}
+                        style={{ backgroundColor: 'blue', borderRadius: 20, flex: 1, borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>UPDATE</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => deleteSong(item.item.id)}
+                        style={{ backgroundColor: 'blue', borderRadius: 20, flex: 1, borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>DELETE</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={{flexDirection:'row', borderBottomWidth: 1, borderColor: 'green'}}>
+                <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: 'green' }}>
                 </View>
 
             </>
@@ -193,7 +209,7 @@ const SongsScreen = (props) => {
                 </View>
                 :
                 <>
-                    
+
                     <View style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
                         <View style={styles.inputSearchBoxContainerStyle}>
                             <TextInput
@@ -214,16 +230,16 @@ const SongsScreen = (props) => {
                         </View>
                         <TouchableOpacity
                             onPress={() => setIsModalFilter(true)}
-                            style={{ backgroundColor:'blue', borderRadius:20,height: 30, width: "100%", borderColor: "blue", marginBottom: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>FILTER</Text>
+                            style={{ backgroundColor: 'blue', borderRadius: 20, height: 30, width: "100%", borderColor: "blue", marginBottom: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>FILTER</Text>
                             {filtervalue != "" &&
-                                <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}> : {filtervalue}</Text>
+                                <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}> : {filtervalue}</Text>
                             }
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => searchByFilter()}
-                            style={{ backgroundColor:'blue', borderRadius:20,height: 30, width: "100%", borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color:"white" }}>SEARCH</Text>
+                            style={{ backgroundColor: 'blue', borderRadius: 20, height: 30, width: "100%", borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>SEARCH</Text>
                         </TouchableOpacity>
                     </View>
                     <ScrollView style={{ flex: 0.8 }}>
@@ -236,6 +252,18 @@ const SongsScreen = (props) => {
                             )
                         })}
                     </ScrollView>
+                    <View style={{height:80, width:'100%', justifyContent:'space-evenly', alignItems:'center'}}>
+                    <TouchableOpacity
+                            onPress={() => addNewSong(songList)}
+                            style={{ backgroundColor: 'blue', borderRadius: 20, height: 30, width: "100%", borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>ADD SONGS</Text>
+                        </TouchableOpacity>
+                    <TouchableOpacity
+                            onPress={() => logout()}
+                            style={{ backgroundColor: 'blue', borderRadius: 20, height: 30, width: "100%", borderColor: "blue", borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: "white" }}>LOG OUT</Text>
+                        </TouchableOpacity>
+                    </View>
                 </>
             }
         </>
@@ -243,7 +271,7 @@ const SongsScreen = (props) => {
 
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 10, backgroundColor:'lightblue' }}>
+        <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 10, backgroundColor: 'lightblue' }}>
             {viewContent}
             <Modal
                 onBackButtonPress={_hideModal}

@@ -10,6 +10,7 @@ import SongsScreen from '../components/SongsScreen';
 import SongsDetail from '../components/SongsDetail';
 import SongsUpdate from '../components/SongsUpdate';
 import LoginScreen from '../components/LoginScreen';
+import SongsAdd from '../components/SongsAdd';
 
 
 class NavigationRouter extends Component {
@@ -50,6 +51,7 @@ class NavigationRouter extends Component {
                     key='root'>
                     <Scene key='login'
                         initial
+                        hideNavBar
                         title="Login"
                         titleStyle={styles.headerTitleBig}
                         component={LoginScreen} />
@@ -71,6 +73,12 @@ class NavigationRouter extends Component {
                         title="Song Update"
                         titleStyle={styles.headerTitleBig}
                         component={SongsUpdate} />
+                    <Scene key='addSong'
+                        back
+                        backButtonTintColor="white"
+                        title="Add Song"
+                        titleStyle={styles.headerTitleBig}
+                        component={SongsAdd} />
                 </Stack>
             </Router>
         )

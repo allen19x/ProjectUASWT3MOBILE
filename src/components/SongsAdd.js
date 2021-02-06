@@ -5,25 +5,28 @@ import { Buffer } from 'buffer'
 import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 
-const SongsUpdate = (props) => {
+const SongsAdd = (props) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const [artistValue, setArtistValue] = useState(props.songs.artist)
-    const [titleValue, setTitleValue] = useState(props.songs.title)
-    const [durationValue, setDurationValue] = useState(props.songs.duration)
-    const [albumValue, setAlbumValue] = useState(props.songs.album)
-    const [linkValue, setLinkValue] = useState(props.songs.link)
-    const [genreValue, setGenreValue] = useState(props.songs.genre)
-    const [yearValue, setYearValue] = useState(props.songs.year)
-    const [imageLink, setImageLink] = useState(props.songs.poster)
+    const [artistValue, setArtistValue] = useState("")
+    const [titleValue, setTitleValue] = useState("")
+    const [durationValue, setDurationValue] = useState("")
+    const [albumValue, setAlbumValue] = useState("")
+    const [linkValue, setLinkValue] = useState("")
+    const [genreValue, setGenreValue] = useState("")
+    const [yearValue, setYearValue] = useState("")
+    const [imageLink, setImageLink] = useState("")
+    const [id, setId] = useState("")
 
     const BASE_URL = "http://192.168.0.17:3001"
 
-    const updateSong = () => {
+
+    const addSongs = () => {
         setIsLoading(true)
-        var session_url = `${BASE_URL}/songs/${props.songs.id}`;
+        var session_url = `${BASE_URL}/songs`;
         var uname = props.loginData.username;
         var pass = props.loginData.password;
+        console.log(uname)
         const token = Buffer.from(`${uname}:${pass}`, 'utf8').toString('base64')
         console.log("TEST", token)
         var config = {
@@ -33,7 +36,7 @@ const SongsUpdate = (props) => {
         }
 
         var content = {
-            "id": props.songs.id,
+            "id": id,
             "title": titleValue,
             "album": albumValue,
             "artist": artistValue,
@@ -43,9 +46,9 @@ const SongsUpdate = (props) => {
             "poster": imageLink,
             "link":linkValue
         }
-        axios.put(session_url, content, config)
+        axios.post(session_url, content, config)
             .then(function (response) {
-                alert('Success Update Songs')
+                alert('Success Add Songs')
                 setIsLoading(false)
                 Actions.pop()
             }).catch(function (error) {
@@ -63,9 +66,32 @@ const SongsUpdate = (props) => {
                 </View>
                 :
                 <>
-                    <ScrollView>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
-                            <Image style={{ width: 200, height: 200, marginBottom: 20 }} resizeMode='cover' source={{ uri: props.songs.poster }} />
+                            <View
+                                style={{
+                                    height: 45,
+                                    maxHeight: 60,
+                                    flexDirection: "row",
+                                    justifyContent: 'space-between',
+                                    marginBottom: 20,
+                                    alignItems: 'center',
+
+                                }}>
+                                <Text style={{ fontFamily: Fonts.SF_COMPACT_MEDIUM, color: "black", fontSize: 16 }}>ID :</Text>
+                                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                    <View style={styles.inputSearchBoxContainerStyle}>
+                                        <TextInput
+                                            placeholder={titleValue}
+                                            placeholderTextColor="gray"
+                                            selectionColor="red"
+                                            numberOfLines={1}
+                                            style={{ fontFamily: Fonts.SF_COMPACT_REGULAR, color: "lightblack", fontSize: 14, marginLeft: 2 }}
+                                            value={id}
+                                            onChangeText={setId}>
+                                        </TextInput>
+                                    </View>
+                                </View>
+                            </View>
                             <View
                                 style={{
                                     height: 45,
@@ -80,7 +106,7 @@ const SongsUpdate = (props) => {
                                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
                                     <View style={styles.inputSearchBoxContainerStyle}>
                                         <TextInput
-                                            placeholder={imageLink}
+                                            placeholder={titleValue}
                                             placeholderTextColor="gray"
                                             selectionColor="red"
                                             numberOfLines={1}
@@ -242,8 +268,8 @@ const SongsUpdate = (props) => {
                                     </View>
                                 </View>
                             </View>
-
-                           <View style={{
+                            <View
+                                style={{
                                     height: 45,
                                     maxHeight: 60,
                                     flexDirection: "row",
@@ -267,15 +293,13 @@ const SongsUpdate = (props) => {
                                     </View>
                                 </View>
                             </View>
-                            
 
                             <TouchableOpacity
-                                onPress={() => updateSong()}
+                                onPress={() => addSongs()}
                                 style={{ backgroundColor: 'blue', borderRadius: 20, height: 30, width: "100%", borderColor: "blue", marginBottom: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                                 <Text style={{ fontSize: 14, fontFamily: Fonts.SF_COMPACT_BOLD, color: 'white' }}>Submit Change</Text>
                             </TouchableOpacity>
                         </View>
-                    </ScrollView>
                 </>
             }
         </View >
@@ -316,4 +340,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default SongsUpdate;
+export default SongsAdd;
